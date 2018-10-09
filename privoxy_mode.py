@@ -11,7 +11,7 @@ from requests import get
 from base64 import b64decode
 import winreg
 from os import path
-
+from shutil import copy
 
 # 更新gfwlist 调用即可将gfw拦截的域名更新至最新，写入privoxy文件夹下的gfwlist文件中
 def get_gfwlist():
@@ -61,10 +61,9 @@ def direct_mode():
 # PAC模式
 def pac_mode():
     if path.exists('./privoxy/gfwlist'):
-        f_lines = open('./privoxy/gfwlist', 'r').readlines()
-        open('./privoxy/pac.action', 'w').write('+forward-override{forward-socks5 127.0.0.1:1081 .}}')
-        for f in f_lines:
-            open('./privoxy/pac.action', 'a').write(f + '\n')
+        copy('./privoxy/gfwlist','./privoxy/pac.action')
+        open('./privoxy/pac.action', 'r+').write('+forward-override{forward-socks5 127.0.0.1:1081 .}}\n')
+
     else:
         get_gfwlist()
         pac_mode()
@@ -76,3 +75,4 @@ def pac_mode():
 def all_mode():
     open('./privoxy/pac.action', 'w').write('{+forward-override{forward-socks5 127.0.0.1:1081 .}}\n /')
     enable_IEproxy()
+
