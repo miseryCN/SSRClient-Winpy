@@ -32,6 +32,7 @@ def get_gfwlist():
 
     if err_count < len(url_list):
         open('./privoxy/gfwlist', 'wb').write(b64decode(gfw_list.content))
+        return 'Success'
     else:
         return 'Network Error'
 
