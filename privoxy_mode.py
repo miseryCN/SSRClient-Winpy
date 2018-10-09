@@ -1,7 +1,6 @@
 """
 这个模块是更改代理模式的，有如下三种：
 直连模式、PAC模式、全局模式
-
 1 直连模式: 更改注册表，去掉IE代理
 2 PAC模式: 更改privoxy下的pac.action 内容替换为 PAC_list 设置IE代理
 3 全局模式: 更改privoxy下的pac.action 内容替换为 /   设置IE代理
