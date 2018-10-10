@@ -7,9 +7,10 @@
 """
 from time import sleep
 from requests import get
-from base64 import b64decode
 from os import path,popen,remove
-from shutil import copy
+import win32gui
+import win32con
+import win32api
 
 #直接获取gfwlist,无需转换 6小时更新一次
 def updateGfwList():
@@ -52,7 +53,22 @@ def set_proxy(enable, proxy_ip):
     winreg.SetValueEx(key, 'ProxyServer', 0, winreg.REG_SZ, proxy_ip)
 '''
 
+#逗比专用模块（退出）/后期会改
+def exit_privoxy():
+    win_title = 'Privoxy'
+    wnd = win32gui.FindWindow(None, win_title)
+    win32gui.SendMessage(wnd, win32con.WM_CLOSE)
 
+
+#仅供娱乐，关闭到任务栏/后期会改
+def close_privoxy():
+    win_title = 'Privoxy'
+    wnd = win32gui.FindWindow(None, win_title)
+    left, top, right, bottom = win32gui.GetWindowRect(wnd)
+    right = right - 25
+    top = top + 25
+    win32api.SetCursorPos([right, top])
+    win32api.mouse_event(win32con.MOUSEEVENTF_LEFTUP | win32con.MOUSEEVENTF_LEFTDOWN, 0, 0, 0)
 
 
 #是否启用IE代理，地址为 127.0.0.1:1080 写入注册表。参考:https://www.jianshu.com/p/49c444d9a435
@@ -85,9 +101,12 @@ def pac_mode():
         f = f.replace('forward-socks5 / 127.0.0.1:1080 .','actionsfile pac.action')
         open('./privoxy/config.txt', 'w').write(f)
         IEProxy('enable')
-        popen('taskkill /F /IM privoxy.exe')
+        exit_privoxy()
         sleep(0.3)
         popen('cd privoxy && privoxy.exe')
+        sleep(0.5)
+        close_privoxy()
+
     else:
         updateGfwList()
         pac_mode()
@@ -99,8 +118,10 @@ def all_mode():
     f = f.replace('actionsfile pac.action','forward-socks5 / 127.0.0.1:1080 .')
     open('./privoxy/config.txt','w').write(f)
     IEProxy('enable')
-    popen('taskkill /F /IM privoxy.exe')
+    exit_privoxy()
     sleep(0.3)
     popen('cd privoxy && privoxy.exe')
+    sleep(0.5)
+    close_privoxy()
 
 pac_mode()
