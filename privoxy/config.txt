@@ -1,5 +1,5 @@
 listen-address 127.0.0.1:1081
-actionsfile pac.action
+forward-socks5 / 127.0.0.1:1080 .
 
 confdir .
 logdir .

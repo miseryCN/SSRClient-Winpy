@@ -12,6 +12,9 @@ import win32gui
 import win32con
 import win32api
 
+
+
+
 #直接获取gfwlist,无需转换 6小时更新一次
 def updateGfwList():
     IEProxy('disable')
@@ -92,6 +95,7 @@ def IEProxy(enable):
 # 直连模式
 def direct_mode():
     IEProxy('disable')
+    return 'success'
 
 
 # PAC模式
@@ -110,7 +114,7 @@ def pac_mode():
     else:
         updateGfwList()
         pac_mode()
-
+    return 'success'
 
 # 全局模式
 def all_mode():
@@ -123,5 +127,4 @@ def all_mode():
     popen('cd privoxy && privoxy.exe')
     sleep(0.5)
     close_privoxy()
-
-pac_mode()
+    return 'success'
