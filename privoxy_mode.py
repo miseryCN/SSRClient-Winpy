@@ -11,16 +11,18 @@ from os import path,popen,remove,getcwd
 import win32gui
 import win32con
 import win32api
-
+from shutil import copy
 
 
 
 #直接获取gfwlist,无需转换 6小时更新一次
 def updateGfwList():
     IEProxy('disable')
-    url = 'https://zfl9.github.io/gfwlist2privoxy/gfwlist.action'
-    open('./privoxy/pac.action','wb').write(get(url).content)
-
+    try:
+        url = 'https://zfl9.github.io/gfwlist2privoxy/gfwlist.action'
+        open('./privoxy/pac.action','wb').write(get(url).content)
+    except:
+        copy('pac.action.default','pac.action')
 
 '''
 # 更新gfwlist 调用即可将gfw拦截的域名更新至最新，写入privoxy文件夹下的gfwlist文件中
