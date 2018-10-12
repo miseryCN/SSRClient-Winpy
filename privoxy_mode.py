@@ -7,7 +7,7 @@
 """
 from time import sleep
 from requests import get
-from os import path,popen,remove
+from os import path,popen,remove,getcwd
 import win32gui
 import win32con
 import win32api
@@ -63,15 +63,13 @@ def exit_privoxy():
     win32gui.SendMessage(wnd, win32con.WM_CLOSE)
 
 
-#仅供娱乐，关闭到任务栏/后期会改
-def close_privoxy():
-    win_title = 'Privoxy'
-    wnd = win32gui.FindWindow(None, win_title)
-    left, top, right, bottom = win32gui.GetWindowRect(wnd)
-    right = right - 25
-    top = top + 25
-    win32api.SetCursorPos([right, top])
-    win32api.mouse_event(win32con.MOUSEEVENTF_LEFTUP | win32con.MOUSEEVENTF_LEFTDOWN, 0, 0, 0)
+#启动privoxy，后台运行
+def start_privoxy():
+    work_path = getcwd()
+    privoxy_folder = work_path+'\\privoxy\\'
+    privoxy_path = work_path+'\\privoxy\\privoxy.exe'
+    win32api.ShellExecute(0, 'open',privoxy_path, '', privoxy_folder, 0)
+
 
 
 #是否启用IE代理，地址为 127.0.0.1:1080 写入注册表。参考:https://www.jianshu.com/p/49c444d9a435
@@ -95,7 +93,7 @@ def IEProxy(enable):
 # 直连模式
 def direct_mode():
     IEProxy('disable')
-    return 'success'
+
 
 
 # PAC模式
@@ -107,14 +105,11 @@ def pac_mode():
         IEProxy('enable')
         exit_privoxy()
         sleep(0.3)
-        popen('cd privoxy && privoxy.exe')
-        sleep(0.5)
-        close_privoxy()
+        start_privoxy()
 
     else:
         updateGfwList()
         pac_mode()
-    return 'success'
 
 # 全局模式
 def all_mode():
@@ -124,7 +119,6 @@ def all_mode():
     IEProxy('enable')
     exit_privoxy()
     sleep(0.3)
-    popen('cd privoxy && privoxy.exe')
-    sleep(0.5)
-    close_privoxy()
-    return 'success'
+    start_privoxy()
+
+
