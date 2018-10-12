@@ -1,5 +1,5 @@
 listen-address 127.0.0.1:1081
-forward-socks5 / 127.0.0.1:1080 .
+actionsfile pac.action
 
 confdir .
 logdir .
@@ -9,7 +9,6 @@ actionsfile user.action      # User customizations
 filterfile default.filter
 filterfile user.filter      # User customizations
 logfile privoxy.log
-listen-address  127.0.0.1:8118
 toggle  1
 enable-remote-toggle  0
 enable-remote-http-toggle  0

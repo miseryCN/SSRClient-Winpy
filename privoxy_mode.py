@@ -84,7 +84,7 @@ def IEProxy(enable):
         reg_value = settings+proxySwitchValue+fileteLocalValue
     open('./tmp.reg','w').write(reg_value)
     popen('reg import ./tmp.reg')
-    sleep(0.5)
+    sleep(0.3)
     remove('./tmp.reg')
 
 
@@ -93,6 +93,7 @@ def IEProxy(enable):
 # 直连模式
 def direct_mode():
     IEProxy('disable')
+    exit_privoxy()
 
 
 

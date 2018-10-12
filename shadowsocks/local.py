@@ -21,17 +21,18 @@ from __future__ import absolute_import, division, print_function, \
 import sys
 import os
 import logging
-import signal
+#import signal
 
 if __name__ == '__main__':
     import inspect
     file_path = os.path.dirname(os.path.realpath(inspect.getfile(inspect.currentframe())))
     sys.path.insert(0, os.path.join(file_path, '../'))
 
-from shadowsocks import shell, daemon, eventloop, tcprelay, udprelay, asyncdns
+from shadowsocks import shell, eventloop, tcprelay, udprelay, asyncdns
 
 
-def main():
+
+def main(config):
     shell.check_python()
 
     # fix py2exe
@@ -40,17 +41,17 @@ def main():
         p = os.path.dirname(os.path.abspath(sys.executable))
         os.chdir(p)
 
-    config = shell.get_config(True)
+    #config = shell.get_config(True)
 
     if not config.get('dns_ipv6', False):
         asyncdns.IPV6_CONNECTION_SUPPORT = False
 
-    daemon.daemon_exec(config)
-    logging.info("local start with protocol[%s] password [%s] method [%s] obfs [%s] obfs_param [%s]" %
+    #daemon.daemon_exec(config)
+    print("local start with protocol[%s] password [%s] method [%s] obfs [%s] obfs_param [%s]" %
             (config['protocol'], config['password'], config['method'], config['obfs'], config['obfs_param']))
 
     try:
-        logging.info("starting local at %s:%d" %
+        print("starting local at %s:%d" %
                      (config['local_address'], config['local_port']))
 
         dns_resolver = asyncdns.DNSResolver()
@@ -65,17 +66,16 @@ def main():
             logging.warn('received SIGQUIT, doing graceful shutting down..')
             tcp_server.close(next_tick=True)
             udp_server.close(next_tick=True)
-        signal.signal(getattr(signal, 'SIGQUIT', signal.SIGTERM), handler)
+        #signal.signal(getattr(signal, 'SIGQUIT', signal.SIGTERM), handler)
 
         def int_handler(signum, _):
             sys.exit(1)
-        signal.signal(signal.SIGINT, int_handler)
+        #signal.signal(signal.SIGINT, int_handler)
 
-        daemon.set_user(config.get('user', None))
+        #daemon.set_user(config.get('user', None))
         loop.run()
     except Exception as e:
         shell.print_exception(e)
         sys.exit(1)
 
-if __name__ == '__main__':
-    main()
+

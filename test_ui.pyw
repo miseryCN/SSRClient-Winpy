@@ -2,6 +2,8 @@
 
 import privoxy_mode
 from PyQt5 import QtCore, QtGui, QtWidgets
+import config
+from shadowsocks import local
 
 class Ui_Main(object):
     def setupUi(self, Main):
@@ -94,9 +96,23 @@ class Ui_Main(object):
         self.exit_button.clicked.connect(Main.close)
 if __name__ == '__main__':
     import sys
-    app = QtWidgets.QApplication(sys.argv)
-    fromObj = QtWidgets.QMainWindow()
-    ui = Ui_Main()
-    ui.setupUi(fromObj)
-    fromObj.show()
-    sys.exit(app.exec_())
+    from threading import Thread
+    def sslocal():
+        ss_config = config.get_config()
+        local.main(ss_config)
+
+    def MainUI():
+        app = QtWidgets.QApplication(sys.argv)
+        fromObj = QtWidgets.QMainWindow()
+        ui = Ui_Main()
+        ui.setupUi(fromObj)
+        fromObj.show()
+        sys.exit(app.exec_())
+
+    UI = Thread(target=MainUI)
+    ss_local = Thread(target=sslocal)
+    ss_local.setDaemon(True)
+    ss_local.start()
+    UI.start()
+
+
