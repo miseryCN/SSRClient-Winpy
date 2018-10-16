@@ -45,10 +45,10 @@ def subscribe_link(link):
     ssr_links = response_decode.replace('ssr://', '').splitlines()
     conn_info = {}
     for ssr_link in ssr_links:
-        try:
-            single_info = str_bdecode(ssr_link).replace('eXV4aWFvd2VpMTk5NA/?', '').split(':')
-        except:
-            return 'no server to use'
+        #try:
+        single_info = str_bdecode(ssr_link).replace('eXV4aWFvd2VpMTk5NA/?', '').split(':')
+        #except:
+         #   return 'no server to use'
         single_param = single_info[5].split('&')
         obfs_param = str_bdecode(single_param[0].replace('obfsparam=', ''))
         proto_param = str_bdecode(single_param[1].replace('protoparam=', ''))
@@ -111,7 +111,6 @@ def api_login():
         return info_list
     else:
         return 'error user'
-
 
 '''
 def get_config():
