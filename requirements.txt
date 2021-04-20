@@ -6,7 +6,7 @@ colorama==0.3.9
 idna==2.7
 more-itertools==4.3.0
 pluggy==0.7.1
-py==1.6.0
+py==1.10.0
 Pypubsub==4.0.0
 pytest==3.8.2
 requests==2.19.1
